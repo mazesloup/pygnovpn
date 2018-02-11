@@ -1,6 +1,15 @@
 # pygnovpn
 
-Helper to convert .ovpn to network-manager-gnome readable format
+Helper to convert .ovpn file to network-manager-gnome readable format
+
+It's generate 4 or 5 files from one .ovpn file
+ - .ovpn without cert and key
+ - CA cert
+ - Client cert
+ - Client Key
+ - TA key
+ 
+It disable some option (reneg-sec by default know for crash at import), more option to disable can be pass at command line
 
 ## Getting Started
 
@@ -9,10 +18,26 @@ Helper to convert .ovpn to network-manager-gnome readable format
 
 Python > 2
 
-
 ### Usage
+```
+usage: pygnovpn.py [-h] [-c] [-q] [-d DISABLE] infile outdir
 
-python pygnovpn.py --ovpn myconfig.ovpn --dest /mydestination/
+Helper to convert .ovpn to network-manager-gnome readable format
+
+positional arguments:
+  infile                .ovpn input file
+  outdir                destination directory for output files
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c, --create-dir      If specified, output dir will be created if not exists
+  -q, --quiet           No output, not quering for create folder, use
+                        --create-dir to auto-create
+  -d DISABLE, --disable-options DISABLE
+                        Append options to disable while exporting
+                        configuration, can have more than one
+
+```
 
 ## Author
 
@@ -21,4 +46,4 @@ python pygnovpn.py --ovpn myconfig.ovpn --dest /mydestination/
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the  GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details
