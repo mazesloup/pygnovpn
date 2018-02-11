@@ -16,15 +16,21 @@ class pygnovpn:
     cert = False
     key = False
     tls = False
+    createdir = False
+    quiet = False
     todisable = ['reneg-sec']
 
-    def __init__(self, infile, outdir):
+    def __init__(self, infile, outdir, createdir, quiet, disable=[]):
         self.infile = infile
         self.outdir = outdir
+        self.createdir = createdir
         self.filename = os.path.basename(self.infile)
-        self.todisable = ['reneg-sec']
-        self.printinfo('Analysing '+ self.infile)
+        self.quiet = quiet
+        if disable:
+            self.todisable = ['reneg-sec'] + disable
+        self.printinfo('Analysing '+self.infile)
         self.setdata()
+        self.checkfolder()
         self.parsedata()
 
 
@@ -34,8 +40,30 @@ class pygnovpn:
             self.data = f.read()
             f.close()
         except Exception:
-            self.printinfo('[!] Can\'t open '+self.infile)
-            sys.exit(0)
+            self.printinfo('Can\'t open '+self.infile)
+            sys.exit(1)
+
+    def checkfolder(self):
+        if not (os.path.exists(self.outdir)):
+            if self.createdir:
+                try:
+                    os.makedirs(self.outdir)
+                except Exception:
+                    self.printinfo('Can\'t create output folder... Aborting...')
+                    sys.exit(1)
+            elif not self.quiet:
+                c = raw_input("Directory "+self.outdir+ " not exists, would you like create it ? [Y/n]")
+                if c.strip().__len__() == 0 or c.strip().lower()[0] == 'y':
+                    try:
+                        os.makedirs(self.outdir)
+                    except Exception:
+                        self.printinfo('Can\'t create output folder... Aborting...')
+                        sys.exit(1)
+                else:
+                    self.printinfo("Can\'t open output directory... Aborting...")
+                    sys.exit(1)
+            else:
+                sys.exit(1)
 
     def parsedata(self):
         self.ovpn = self.data[0:self.data.find('<ca>')]
@@ -79,7 +107,7 @@ class pygnovpn:
                 f.close()
             except:
                 self.printinfo("Can\'t save file " + fname + " exiting...")
-                sys.exit(0)
+                sys.exit(1)
 
     def printvalues(self):
         self.printinfo(self.ovpn)
@@ -88,18 +116,22 @@ class pygnovpn:
         self.printinfo(self.key)
 
     def printinfo(self, s):
-        print '->', s
+        if not self.quiet:
+            print '->', s
 
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Helper to convert .ovpn to network-manager-gnome readable format')
-    parser.add_argument('--ovpn', help='.ovpn input file', action='store', default=False, dest='infile')
-    parser.add_argument('--dest', help='destination directory for output files', action='store',
-                        default=False, dest='outdir')
+    parser.add_argument(metavar='infile', help='.ovpn input file',  action='store', dest='infile')
+    parser.add_argument(metavar='outdir', help='destination directory for output files', action='store', dest='outdir')
+    parser.add_argument('-c', '--create-dir', help='If specified, output dir will be created if not exists',
+                        action='store_true', dest='createdir')
+    parser.add_argument('-q', '--quiet', help='No output, not quering for create folder, use --create-dir to auto-create',
+                        action='store_true', dest='quiet')
+    parser.add_argument('-d', '--disable-options', help='Append options to disable while exporting configuration, can have more than one',
+                        action='append', dest='disable')
     args = parser.parse_args()
-    if (not args.infile) and (not args.outdir):
-        parser.error('Please, specify two arguments')
-        sys.exit(0)
+
     #do the stuff
-    g = pygnovpn(args.infile, args.outdir)
+    pygnovpn(args.infile, args.outdir, args.createdir, args.quiet, args.disable)
