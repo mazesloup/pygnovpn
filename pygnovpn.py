@@ -33,7 +33,6 @@ class pygnovpn:
         self.checkfolder()
         self.parsedata()
 
-
     def setdata(self):
         try:
             f = open(self.infile, "r")
@@ -49,7 +48,7 @@ class pygnovpn:
                 try:
                     os.makedirs(self.outdir)
                 except Exception:
-                    self.printinfo('Can\'t create output folder... Aborting...')
+                    self.printinfo('Can\'t create output directory... Aborting...')
                     sys.exit(1)
             elif not self.quiet:
                 c = raw_input("Directory "+self.outdir+ " not exists, would you like create it ? [Y/n]")
@@ -57,7 +56,7 @@ class pygnovpn:
                     try:
                         os.makedirs(self.outdir)
                     except Exception:
-                        self.printinfo('Can\'t create output folder... Aborting...')
+                        self.printinfo('Can\'t create output directory... Aborting...')
                         sys.exit(1)
                 else:
                     self.printinfo("Can\'t open output directory... Aborting...")
@@ -99,13 +98,13 @@ class pygnovpn:
 
     def savefile(self, data, filename):
         if data:
+            fname = os.path.join(self.outdir, filename)
             try:
-                fname = os.path.join(self.outdir, filename)
                 f = open(fname, "w")
                 data = os.linesep.join([s for s in data.splitlines() if s])
                 f.write(data)
                 f.close()
-            except:
+            except Exception:
                 self.printinfo("Can\'t save file " + fname + " exiting...")
                 sys.exit(1)
 

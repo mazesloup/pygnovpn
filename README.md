@@ -9,7 +9,7 @@ It's generate 4 or 5 files from one .ovpn file
  - Client Key
  - TA key
  
-It disable some option (reneg-sec by default know for crash at import), more option to disable can be pass at command line
+It disable some option (reneg-sec by default know for crash at import), more option can be disable by pass them at command line
 
 ## Getting Started
 
@@ -41,7 +41,7 @@ optional arguments:
 
 ## Author
 
-* **Mathieu Courquin** - *Initial work* - [MazeSloup](https://mat-ik.fr)
+* **Mathieu Courquin** [mathieu@mat-ik.fr](mailto:mathieu@mat-ik.fr) - *Initial work* - [MazeSloup](https://mat-ik.fr)
 
 
 ## License
