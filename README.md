@@ -17,6 +17,7 @@ It disable some option (reneg-sec by default know for crash at import), more opt
 ### Prerequisites
 
 Python > 2
+Python 2.7 with python-tk for gui not needed for console based
 
 ### Usage
 ```
@@ -36,6 +37,13 @@ optional arguments:
   -d DISABLE, --disable-options DISABLE
                         Append options to disable while exporting
                         configuration, can have more than one
+
+```
+
+For gui
+
+```
+python pygnovpn-gui.py
 
 ```
 
